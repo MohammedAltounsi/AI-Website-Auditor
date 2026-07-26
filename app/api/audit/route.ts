@@ -3,6 +3,10 @@ import { getPageSpeedScores } from '../../../lib/pagespeed'
 import { analyzeWithClaude } from '../../../lib/analyze'
 import type { AuditReport } from '../../../lib/types'
 
+// A real 4-category PageSpeed run can legitimately take 20-90s, plus PSI's
+// retry-on-500 behavior — give this route more room than Vercel's default.
+export const maxDuration = 120
+
 export async function POST(request: Request) {
   try {
     const body = await request.json()

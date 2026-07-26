@@ -1,6 +1,23 @@
 import type { PageSpeedResult } from './types'
 
 const PSI_ENDPOINT = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed'
+const MAX_ATTEMPTS = 3
+const RETRY_DELAY_MS = 1000
+
+/**
+ * PSI intermittently returns a 500 on real-world audits (confirmed empirically —
+ * the identical request succeeds on retry), especially when all 4 categories are
+ * requested together. A 4xx means the request itself is wrong, so only 5xx is retried.
+ */
+async function fetchWithRetry(url: string): Promise<Response> {
+  let res: Response
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    res = await fetch(url)
+    if (res.ok || res.status < 500 || attempt === MAX_ATTEMPTS) return res
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
+  }
+  return res!
+}
 
 export async function getPageSpeedScores(url: string): Promise<PageSpeedResult> {
   const apiKey = process.env.PAGESPEED_API_KEY
@@ -11,7 +28,7 @@ export async function getPageSpeedScores(url: string): Promise<PageSpeedResult> 
   const params = new URLSearchParams({ url, key: apiKey, strategy: 'mobile' })
   ;['performance', 'accessibility', 'seo', 'best-practices'].forEach((c) => params.append('category', c))
 
-  const res = await fetch(`${PSI_ENDPOINT}?${params.toString()}`)
+  const res = await fetchWithRetry(`${PSI_ENDPOINT}?${params.toString()}`)
   if (!res.ok) {
     throw new Error(`PageSpeed API failed: ${res.status}`)
   }
