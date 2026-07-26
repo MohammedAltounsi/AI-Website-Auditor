@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { ReportView } from './ReportView'
 import type { AuditReport } from '../../lib/types'
@@ -28,6 +28,22 @@ const report: AuditReport = {
 }
 
 describe('ReportView', () => {
+  beforeEach(() => {
+    let now = 0
+    vi.spyOn(performance, 'now').mockImplementation(() => now)
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
+      now += 1000
+      cb(now)
+      return 1
+    })
+    vi.stubGlobal('cancelAnimationFrame', () => {})
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+  })
+
   it('renders the hero health score, sub-scores, summary, and fixes', () => {
     render(<ReportView report={report} />)
     expect(screen.getByText('89')).toBeInTheDocument()

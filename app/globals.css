@@ -1,26 +1,79 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0b0a08;
+  --bg-elevated: #171310;
+  --bg-grid-line: rgba(244, 239, 228, 0.05);
+  --fg: #f4efe4;
+  --fg-muted: #96897a;
+  --accent: #ff7a1a;
+  --accent-soft: #40200c;
+  --border: rgba(244, 239, 228, 0.14);
+  --border-strong: rgba(244, 239, 228, 0.3);
+
+  --sev-critical: #ff3b30;
+  --sev-high: #d9534f;
+  --sev-medium: #b8863c;
+  --sev-low: #7a7264;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-sev-critical: var(--sev-critical);
+  --color-sev-high: var(--sev-high);
+  --color-sev-medium: var(--sev-medium);
+  --color-sev-low: var(--sev-low);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    linear-gradient(var(--bg-grid-line) 1px, transparent 1px) 0 0 / 100% 40px,
+    linear-gradient(90deg, var(--bg-grid-line) 1px, transparent 1px) 0 0 / 40px 100%,
+    var(--bg);
+  color: var(--fg);
+  font-family: var(--font-display), serif;
+}
+
+.font-data {
+  font-family: var(--font-mono), monospace;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-in {
+  animation: stagger-in 0.5s ease-out both;
+}
+
+@keyframes scan-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+.scan-sweep {
+  animation: scan-sweep 1.6s ease-in-out infinite;
 }
