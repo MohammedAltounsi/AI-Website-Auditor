@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { scrapePage } from './scrape'
+import { scrapePage, isPrivateHost } from './scrape'
 
 const SAMPLE_HTML = `
 <html>
@@ -46,5 +46,28 @@ describe('scrapePage', () => {
       text: async () => '',
     })) as unknown as typeof fetch
     await expect(scrapePage('https://example.com/missing')).rejects.toThrow('Failed to fetch')
+  })
+
+  it('rejects private/internal URLs', async () => {
+    await expect(scrapePage('http://localhost/admin')).rejects.toThrow('not allowed')
+    await expect(scrapePage('http://127.0.0.1/admin')).rejects.toThrow('not allowed')
+    await expect(scrapePage('http://169.254.169.254/latest')).rejects.toThrow('not allowed')
+    await expect(scrapePage('http://10.0.0.1/')).rejects.toThrow('not allowed')
+    await expect(scrapePage('http://192.168.1.1/')).rejects.toThrow('not allowed')
+  })
+})
+
+describe('isPrivateHost', () => {
+  it('identifies private hosts', () => {
+    expect(isPrivateHost('localhost')).toBe(true)
+    expect(isPrivateHost('127.0.0.1')).toBe(true)
+    expect(isPrivateHost('10.0.0.1')).toBe(true)
+    expect(isPrivateHost('192.168.1.1')).toBe(true)
+    expect(isPrivateHost('169.254.169.254')).toBe(true)
+  })
+
+  it('allows public hosts', () => {
+    expect(isPrivateHost('example.com')).toBe(false)
+    expect(isPrivateHost('8.8.8.8')).toBe(false)
   })
 })

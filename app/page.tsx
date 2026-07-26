@@ -16,19 +16,24 @@ export default function Home() {
     setError(null)
     setReport(null)
 
-    const res = await fetch('/api/audit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
-    })
-    const body = await res.json()
+    try {
+      const res = await fetch('/api/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      })
+      const body = await res.json()
 
-    if (!res.ok) {
-      setError(body.error ?? 'Audit failed')
-    } else {
-      setReport(body)
+      if (!res.ok) {
+        setError(body.error ?? 'Audit failed')
+      } else {
+        setReport(body)
+      }
+    } catch {
+      setError('Audit failed — check your connection and try again')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (

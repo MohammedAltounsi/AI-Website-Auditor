@@ -4,13 +4,14 @@ import { analyzeWithClaude } from '../../../lib/analyze'
 import type { AuditReport } from '../../../lib/types'
 
 export async function POST(request: Request) {
-  const { url } = await request.json()
-
-  if (typeof url !== 'string' || !url.startsWith('http')) {
-    return Response.json({ error: 'A valid http(s) URL is required' }, { status: 400 })
-  }
-
   try {
+    const body = await request.json()
+    const url = body?.url
+
+    if (typeof url !== 'string' || !/^https?:\/\/.+/.test(url)) {
+      return Response.json({ error: 'A valid http(s) URL is required' }, { status: 400 })
+    }
+
     const [scrape, pageSpeed] = await Promise.all([scrapePage(url), getPageSpeedScores(url)])
     const { summary, topFixes } = await analyzeWithClaude(url, scrape, pageSpeed)
 
@@ -18,6 +19,7 @@ export async function POST(request: Request) {
     return Response.json(report)
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Audit failed'
-    return Response.json({ error: message }, { status: 502 })
+    const status = message.includes('not allowed') || message.includes('valid') ? 400 : 502
+    return Response.json({ error: message }, { status })
   }
 }
