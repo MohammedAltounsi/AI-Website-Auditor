@@ -48,6 +48,44 @@ describe('scrapePage', () => {
     await expect(scrapePage('https://example.com/missing')).rejects.toThrow('Failed to fetch')
   })
 
+  it('follows a same-site redirect and scrapes the final destination', async () => {
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({
+        status: 301,
+        ok: false,
+        headers: new Headers({ location: 'https://example.com/' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        text: async () => SAMPLE_HTML,
+      }) as unknown as typeof fetch
+
+    const result = await scrapePage('http://example.com')
+    expect(result.title).toBe('Test Page')
+  })
+
+  it('refuses to follow a redirect into a private host', async () => {
+    global.fetch = vi.fn(async () => ({
+      status: 302,
+      ok: false,
+      headers: new Headers({ location: 'http://169.254.169.254/latest/meta-data' }),
+    })) as unknown as typeof fetch
+
+    await expect(scrapePage('https://example.com')).rejects.toThrow('not allowed')
+  })
+
+  it('gives up after too many redirects', async () => {
+    global.fetch = vi.fn(async () => ({
+      status: 302,
+      ok: false,
+      headers: new Headers({ location: 'https://example.com/next' }),
+    })) as unknown as typeof fetch
+
+    await expect(scrapePage('https://example.com')).rejects.toThrow('Too many redirects')
+  })
+
   it('rejects private/internal URLs', async () => {
     await expect(scrapePage('http://localhost/admin')).rejects.toThrow('not allowed')
     await expect(scrapePage('http://127.0.0.1/admin')).rejects.toThrow('not allowed')

@@ -11,17 +11,41 @@ export function isPrivateHost(hostname: string): boolean {
   return BLOCKED_RANGES.some((r) => r.test(hostname))
 }
 
-export async function scrapePage(url: string): Promise<ScrapeResult> {
-  const parsed = new URL(url)
-  if (isPrivateHost(parsed.hostname)) {
-    throw new Error('Auditing private/internal URLs is not allowed')
-  }
+const MAX_REDIRECTS = 5
 
-  const res = await fetch(url, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AuditorBot/1.0)' },
-    redirect: 'manual',
-    signal: AbortSignal.timeout(15_000),
-  })
+async function fetchFollowingSafeRedirects(url: string): Promise<Response> {
+  let currentUrl = url
+
+  for (let hop = 0; ; hop++) {
+    const parsed = new URL(currentUrl)
+    if (isPrivateHost(parsed.hostname)) {
+      throw new Error('Auditing private/internal URLs is not allowed')
+    }
+
+    const res = await fetch(currentUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AuditorBot/1.0)' },
+      redirect: 'manual',
+      signal: AbortSignal.timeout(15_000),
+    })
+
+    const isRedirect = res.status >= 300 && res.status < 400
+    if (!isRedirect) return res
+
+    if (hop >= MAX_REDIRECTS) {
+      throw new Error(`Too many redirects fetching ${url}`)
+    }
+    const location = res.headers.get('location')
+    if (!location) {
+      throw new Error(`Redirect from ${currentUrl} had no Location header`)
+    }
+    // Re-checked against isPrivateHost on the next loop iteration — this is
+    // what stops an attacker using a public URL that redirects to an internal one.
+    currentUrl = new URL(location, currentUrl).toString()
+  }
+}
+
+export async function scrapePage(url: string): Promise<ScrapeResult> {
+  const res = await fetchFollowingSafeRedirects(url)
   if (!res.ok) {
     throw new Error(`Failed to fetch ${url}: ${res.status}`)
   }
