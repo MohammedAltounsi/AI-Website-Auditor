@@ -85,6 +85,40 @@ export default function Home() {
         </p>
       )}
       {report && <ReportView report={report} />}
+
+      <section className="mt-24 border-t border-border pt-10 print:hidden">
+        <p className="font-data text-xs uppercase tracking-[0.2em] text-accent">
+          about
+        </p>
+        <h2 className="mt-3 text-2xl font-semibold text-fg md:text-3xl">
+          What this actually does
+        </h2>
+        <p className="mt-4 max-w-2xl text-fg-muted">
+          Paste a URL. This tool scrapes the page, pulls four Google PageSpeed
+          scores, and hands both to Claude with a fixed output format. Claude
+          writes the findings and fixes. It never invents the score — the
+          Health Score is <code className="font-data text-fg">Math.round()</code> of
+          the four PageSpeed numbers, computed in code, every time.
+        </p>
+        <p className="mt-4 max-w-2xl text-fg-muted">
+          Built to show the pattern I use for every AI feature I ship: the
+          model explains, the code decides anything that has to be
+          consistent. No hallucinated scores, no drifting rubric between
+          runs.
+        </p>
+        <p className="mt-4 max-w-2xl text-fg-muted">
+          Stack: Next.js App Router, TypeScript, Tailwind, the Anthropic API
+          with forced tool-use for structured output, Vitest for tests. Full
+          source on{' '}
+          <a
+            href="https://github.com/MohammedAltounsi/AI-Website-Auditor"
+            className="text-accent underline underline-offset-4 hover:opacity-80"
+          >
+            GitHub
+          </a>
+          .
+        </p>
+      </section>
     </main>
   )
 }
