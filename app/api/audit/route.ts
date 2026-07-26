@@ -3,9 +3,11 @@ import { getPageSpeedScores } from '../../../lib/pagespeed'
 import { analyzeWithClaude } from '../../../lib/analyze'
 import type { AuditReport } from '../../../lib/types'
 
-// A real 4-category PageSpeed run can legitimately take 20-90s, plus PSI's
-// retry-on-500 behavior — give this route more room than Vercel's default.
-export const maxDuration = 120
+// A real 4-category PageSpeed run can legitimately take 20-120s+ depending on
+// the target site, plus PSI's retry-on-500 behavior. Confirmed empirically that
+// 120s wasn't enough for a real site (hit FUNCTION_INVOCATION_TIMEOUT at 121s) —
+// 300s is Vercel Hobby's max allowed duration.
+export const maxDuration = 300
 
 export async function POST(request: Request) {
   try {
