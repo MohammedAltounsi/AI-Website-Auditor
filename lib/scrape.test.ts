@@ -36,6 +36,7 @@ describe('scrapePage', () => {
     expect(result.imagesMissingAlt).toBe(1)
     expect(result.hasCanonical).toBe(true)
     expect(result.hasViewportMeta).toBe(true)
+    expect(result.wordCount).toBeGreaterThan(0)
   })
 
   it('throws when the fetch fails', async () => {
