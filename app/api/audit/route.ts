@@ -1,4 +1,4 @@
-import { scrapePage } from '../../../lib/scrape'
+import { scrapePage, AuditRejectedError } from '../../../lib/scrape'
 import { getPageSpeedScores } from '../../../lib/pagespeed'
 import { analyzeWithClaude } from '../../../lib/analyze'
 import type { AuditReport } from '../../../lib/types'
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     return Response.json(report)
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Audit failed'
-    const status = message.includes('not allowed') || message.includes('valid') ? 400 : 502
+    const status = err instanceof AuditRejectedError ? 400 : 502
     return Response.json({ error: message }, { status })
   }
 }

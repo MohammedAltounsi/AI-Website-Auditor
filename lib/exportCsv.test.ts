@@ -39,4 +39,18 @@ describe('reportToCsv', () => {
     const csv = reportToCsv(withQuote)
     expect(csv).toContain('"Uses the word ""click here"""')
   })
+
+  it('neutralizes CSV formula injection on fields starting with = + - @', () => {
+    const withFormulas: AuditReport = {
+      ...report,
+      topFixes: [
+        { category: 'seo', severity: 'critical', issue: '=1+1', fix: '+cmd|" /C calc"!A1' },
+      ],
+    }
+    const csv = reportToCsv(withFormulas)
+    const lines = csv.split('\n')
+    // A leading '=' or '+' etc. is prefixed with a quote so spreadsheet apps
+    // treat the cell as literal text instead of evaluating it as a formula.
+    expect(lines[1]).toBe(`"seo","critical","'=1+1","'+cmd|"" /C calc""!A1"`)
+  })
 })

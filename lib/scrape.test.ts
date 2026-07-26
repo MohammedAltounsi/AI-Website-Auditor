@@ -1,5 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { scrapePage, isPrivateHost } from './scrape'
+
+vi.mock('node:dns/promises', () => {
+  const lookup = vi.fn(async () => [{ address: '93.184.216.34', family: 4 }])
+  return { lookup, default: { lookup } }
+})
+
+import { lookup as dnsLookupImpl } from 'node:dns/promises'
+import { scrapePage, isBlockedIp, AuditRejectedError } from './scrape'
+
+// The real `lookup` overload set doesn't cleanly express the `{ all: true }`
+// array-returning signature for a mock — cast once to the shape we actually use.
+const dnsLookup = dnsLookupImpl as unknown as ReturnType<
+  typeof vi.fn<(hostname: string, opts: { all: true }) => Promise<Array<{ address: string; family: number }>>>
+>
 
 const SAMPLE_HTML = `
 <html>
@@ -18,13 +31,14 @@ const SAMPLE_HTML = `
 </html>
 `
 
+function htmlResponse(html: string) {
+  return { ok: true, status: 200, body: null, text: async () => html } as unknown as Response
+}
+
 describe('scrapePage', () => {
   beforeEach(() => {
-    global.fetch = vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      text: async () => SAMPLE_HTML,
-    })) as unknown as typeof fetch
+    dnsLookup.mockResolvedValue([{ address: '93.184.216.34', family: 4 }])
+    global.fetch = vi.fn(async () => htmlResponse(SAMPLE_HTML)) as unknown as typeof fetch
   })
 
   it('extracts SEO signals from HTML', async () => {
@@ -40,11 +54,7 @@ describe('scrapePage', () => {
   })
 
   it('throws when the fetch fails', async () => {
-    global.fetch = vi.fn(async () => ({
-      ok: false,
-      status: 404,
-      text: async () => '',
-    })) as unknown as typeof fetch
+    global.fetch = vi.fn(async () => ({ ok: false, status: 404, body: null, text: async () => '' })) as unknown as typeof fetch
     await expect(scrapePage('https://example.com/missing')).rejects.toThrow('Failed to fetch')
   })
 
@@ -54,13 +64,10 @@ describe('scrapePage', () => {
       .mockResolvedValueOnce({
         status: 301,
         ok: false,
+        body: null,
         headers: new Headers({ location: 'https://example.com/' }),
       })
-      .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        text: async () => SAMPLE_HTML,
-      }) as unknown as typeof fetch
+      .mockResolvedValueOnce(htmlResponse(SAMPLE_HTML)) as unknown as typeof fetch
 
     const result = await scrapePage('http://example.com')
     expect(result.title).toBe('Test Page')
@@ -70,42 +77,85 @@ describe('scrapePage', () => {
     global.fetch = vi.fn(async () => ({
       status: 302,
       ok: false,
+      body: null,
       headers: new Headers({ location: 'http://169.254.169.254/latest/meta-data' }),
     })) as unknown as typeof fetch
 
-    await expect(scrapePage('https://example.com')).rejects.toThrow('not allowed')
+    await expect(scrapePage('https://example.com')).rejects.toThrow(AuditRejectedError)
   })
 
   it('gives up after too many redirects', async () => {
     global.fetch = vi.fn(async () => ({
       status: 302,
       ok: false,
+      body: null,
       headers: new Headers({ location: 'https://example.com/next' }),
     })) as unknown as typeof fetch
 
     await expect(scrapePage('https://example.com')).rejects.toThrow('Too many redirects')
   })
 
-  it('rejects private/internal URLs', async () => {
-    await expect(scrapePage('http://localhost/admin')).rejects.toThrow('not allowed')
-    await expect(scrapePage('http://127.0.0.1/admin')).rejects.toThrow('not allowed')
-    await expect(scrapePage('http://169.254.169.254/latest')).rejects.toThrow('not allowed')
-    await expect(scrapePage('http://10.0.0.1/')).rejects.toThrow('not allowed')
-    await expect(scrapePage('http://192.168.1.1/')).rejects.toThrow('not allowed')
+  it('rejects literal private/internal IPs without a DNS lookup', async () => {
+    await expect(scrapePage('http://localhost/admin')).rejects.toThrow(AuditRejectedError)
+    await expect(scrapePage('http://127.0.0.1/admin')).rejects.toThrow(AuditRejectedError)
+    await expect(scrapePage('http://169.254.169.254/latest')).rejects.toThrow(AuditRejectedError)
+    await expect(scrapePage('http://10.0.0.1/')).rejects.toThrow(AuditRejectedError)
+    await expect(scrapePage('http://192.168.1.1/')).rejects.toThrow(AuditRejectedError)
+  })
+
+  it('rejects a public hostname that resolves to a private IP (DNS rebinding)', async () => {
+    dnsLookup.mockResolvedValueOnce([{ address: '169.254.169.254', family: 4 }])
+    await expect(scrapePage('http://attacker-controlled.example/')).rejects.toThrow(AuditRejectedError)
+  })
+
+  it('rejects an unresolvable hostname', async () => {
+    dnsLookup.mockRejectedValueOnce(new Error('ENOTFOUND'))
+    await expect(scrapePage('http://does-not-exist.invalid/')).rejects.toThrow('Could not resolve')
+  })
+
+  it('caps response size and rejects oversized bodies', async () => {
+    const chunk = new TextEncoder().encode('a'.repeat(1024 * 1024)) // 1MB per chunk
+    let reads = 0
+    const reader = {
+      read: async () => {
+        reads += 1
+        if (reads > 6) return { done: true, value: undefined } // >5MB total before this returns
+        return { done: false, value: chunk }
+      },
+      cancel: async () => {},
+    }
+    global.fetch = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      body: { getReader: () => reader },
+    })) as unknown as typeof fetch
+
+    await expect(scrapePage('https://example.com')).rejects.toThrow('too large')
   })
 })
 
-describe('isPrivateHost', () => {
-  it('identifies private hosts', () => {
-    expect(isPrivateHost('localhost')).toBe(true)
-    expect(isPrivateHost('127.0.0.1')).toBe(true)
-    expect(isPrivateHost('10.0.0.1')).toBe(true)
-    expect(isPrivateHost('192.168.1.1')).toBe(true)
-    expect(isPrivateHost('169.254.169.254')).toBe(true)
+describe('isBlockedIp', () => {
+  it('identifies private/reserved IPv4 addresses', () => {
+    expect(isBlockedIp('127.0.0.1')).toBe(true)
+    expect(isBlockedIp('10.0.0.1')).toBe(true)
+    expect(isBlockedIp('172.16.0.1')).toBe(true)
+    expect(isBlockedIp('192.168.1.1')).toBe(true)
+    expect(isBlockedIp('169.254.169.254')).toBe(true)
+    expect(isBlockedIp('100.64.0.1')).toBe(true)
+    expect(isBlockedIp('0.0.0.0')).toBe(true)
   })
 
-  it('allows public hosts', () => {
-    expect(isPrivateHost('example.com')).toBe(false)
-    expect(isPrivateHost('8.8.8.8')).toBe(false)
+  it('identifies private/reserved IPv6 addresses', () => {
+    expect(isBlockedIp('::1')).toBe(true)
+    expect(isBlockedIp('fe80::1')).toBe(true)
+    expect(isBlockedIp('fc00::1')).toBe(true)
+    expect(isBlockedIp('fd12:3456::1')).toBe(true)
+    expect(isBlockedIp('::ffff:169.254.169.254')).toBe(true)
+  })
+
+  it('allows public addresses', () => {
+    expect(isBlockedIp('93.184.216.34')).toBe(false)
+    expect(isBlockedIp('8.8.8.8')).toBe(false)
+    expect(isBlockedIp('2606:4700:4700::1111')).toBe(false)
   })
 })
