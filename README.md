@@ -1,3 +1,9 @@
+<div align="center">
+
+**English** · [العربية](README.ar.md)
+
+</div>
+
 # AI Website Auditor
 
 Paste a URL. Get a website audit back in about 10 seconds: a Health Score,
@@ -5,7 +11,15 @@ a performance/accessibility/SEO/best-practices breakdown pulled from real
 Google PageSpeed Insights data, a Claude-written summary, and a
 severity-ranked list of fixes. Export the report as PDF or CSV.
 
-**Live:** https://ai-website-auditor-indol.vercel.app
+**🔗 Live:** https://ai-website-auditor-indol.vercel.app
+
+Built and designed end to end by **Mohammed Altounsi** — [LinkedIn](https://www.linkedin.com/in/mohammed-altounsi/)
+
+---
+
+## Screenshot
+
+![AI Website Auditor — Health Score, category breakdown, and severity-ranked fixes](screenshots/audit.png)
 
 ## The core design decision
 
