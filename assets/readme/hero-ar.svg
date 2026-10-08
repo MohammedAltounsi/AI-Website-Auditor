@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">مُدقّق المواقع بالذكاء الاصطناعي</title>
+  <desc id="desc">الصق رابطاً واحصل على درجة صحّة من بيانات PageSpeed الحقيقية وقائمة إصلاحات مرتّبة. اللوحة تعرض تدقيقاً حقيقياً لموقع stripe.com: درجة الصحّة 73، وهي متوسّط الأداء 44 وإتاحة الوصول 100 وSEO 92 وأفضل الممارسات 54 بعد التقريب.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#f4efe4" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="420" rx="24" fill="#0b0a08"/>
+  <rect width="1200" height="420" rx="24" fill="url(#grid)"/>
+
+  <g id="title-block" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" text-anchor="start" direction="rtl">
+    <text x="1136" y="92" direction="ltr" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" letter-spacing="4" fill="#ff7a1a">SYSTEM // WEBSITE AUDITOR</text>
+    <text x="1136" y="170" font-size="64" font-weight="700" fill="#f4efe4">مُدقّق المواقع</text>
+    <text x="1136" y="242" font-size="46" font-weight="700" fill="#f4efe4">بالذكاء الاصطناعي</text>
+    <g font-size="25" fill="#b3a696">
+      <text x="1136" y="298">الصق رابطاً، واحصل على درجة صحّة من بيانات</text>
+      <text x="1136" y="334">PageSpeed الحقيقية وقائمة إصلاحات مرتّبة.</text>
+    </g>
+    <text x="1136" y="374" font-size="21" fill="#96897a"><tspan fill="#ff7a1a">&lt;</tspan> النموذج يشرح، والكود يقرّر</text>
+  </g>
+
+  <g id="project-proof" transform="translate(-626 0)" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <rect x="690" y="48" width="446" height="324" fill="#171310" stroke="#f4efe4" stroke-opacity="0.14"/>
+    <text x="714" y="86" font-size="18" letter-spacing="3" fill="#96897a">REPORT · STRIPE.COM</text>
+    <line x1="714" y1="102" x2="1112" y2="102" stroke="#f4efe4" stroke-opacity="0.14"/>
+
+    <!-- Health Score gauge -->
+    <circle cx="804" cy="196" r="68" fill="none" stroke="#f4efe4" stroke-opacity="0.14" stroke-width="10"/>
+    <circle cx="804" cy="196" r="68" fill="none" stroke="#b8863c" stroke-width="10" pathLength="100" stroke-dasharray="73 100" transform="rotate(-90 804 196)"/>
+    <text x="804" y="212" text-anchor="middle" font-size="46" font-weight="700" fill="#b8863c">73</text>
+    <text x="804" y="296" text-anchor="middle" font-size="18" letter-spacing="2" fill="#96897a">HEALTH SCORE</text>
+
+    <!-- four PageSpeed category gauges -->
+    <g font-size="22" font-weight="700" text-anchor="middle">
+      <circle cx="966" cy="148" r="30" fill="none" stroke="#f4efe4" stroke-opacity="0.14" stroke-width="7"/>
+      <circle cx="966" cy="148" r="30" fill="none" stroke="#ff3b30" stroke-width="7" pathLength="100" stroke-dasharray="44 100" transform="rotate(-90 966 148)"/>
+      <text x="966" y="156" fill="#ff3b30">44</text>
+
+      <circle cx="1066" cy="148" r="30" fill="none" stroke="#ff7a1a" stroke-width="7"/>
+      <text x="1066" y="156" fill="#ff7a1a">100</text>
+
+      <circle cx="966" cy="248" r="30" fill="none" stroke="#f4efe4" stroke-opacity="0.14" stroke-width="7"/>
+      <circle cx="966" cy="248" r="30" fill="none" stroke="#ff7a1a" stroke-width="7" pathLength="100" stroke-dasharray="92 100" transform="rotate(-90 966 248)"/>
+      <text x="966" y="256" fill="#ff7a1a">92</text>
+
+      <circle cx="1066" cy="248" r="30" fill="none" stroke="#f4efe4" stroke-opacity="0.14" stroke-width="7"/>
+      <circle cx="1066" cy="248" r="30" fill="none" stroke="#b8863c" stroke-width="7" pathLength="100" stroke-dasharray="54 100" transform="rotate(-90 1066 248)"/>
+      <text x="1066" y="256" fill="#b8863c">54</text>
+    </g>
+    <g font-size="18" letter-spacing="1" text-anchor="middle" fill="#96897a">
+      <text x="966" y="200">PERF</text>
+      <text x="1066" y="200">A11Y</text>
+      <text x="966" y="300">SEO</text>
+      <text x="1066" y="300">BEST PR.</text>
+    </g>
+
+    <line x1="714" y1="320" x2="1112" y2="320" stroke="#f4efe4" stroke-opacity="0.14"/>
+    <text x="913" y="352" text-anchor="middle" font-size="19" fill="#f4efe4">round((44+100+92+54)/4) = <tspan fill="#b8863c" font-weight="700">73</tspan></text>
+  </g>
+</svg>
