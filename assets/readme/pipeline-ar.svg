@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc">
   <title id="title">كيف يجري التدقيق</title>
-  <desc id="desc">أربع مراحل. الجلب والتقييم يجريان في الكود، فتبقى درجة الصحّة واحدة في كل تشغيل. مرحلة الشرح وحدها تستدعي Claude، فيعيد ملخّصاً وخمسة إصلاحات مرتّبة عبر مخطّط ثابت.</desc>
+  <desc id="desc">أربع مراحل. مرحلتا الجلب والتقييم لا تستدعيان أي نموذج، ودرجة الصحّة متوسّط درجات PageSpeed الأربع بعد التقريب. مرحلة التحليل تستدعي Claude، فيعيد ملخّصاً وخمسة إصلاحات بصيغة JSON. مرحلة التقرير تعيد تقرير JSON واحداً مع تصدير PDF وCSV.</desc>
   <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#f4efe4" stroke-opacity="0.05"/></pattern></defs>
   <rect width="1200" height="440" rx="24" fill="#0b0a08"/>
   <rect width="1200" height="440" rx="24" fill="url(#grid)"/>
-  <text x="1136" y="72" text-anchor="end" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="22" font-weight="700" fill="#ff7a1a">الكود يقرّر</text>
+  <text x="1136" y="72" text-anchor="end" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="22" font-weight="700" fill="#ff7a1a">بدون ذكاء اصطناعي</text>
   <path d="M620 96V86H1136V96" fill="none" stroke="#ff7a1a" stroke-width="2"/>
-  <text x="580" y="72" text-anchor="end" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="22" font-weight="700" fill="#b8863c">النموذج يشرح</text>
+  <text x="580" y="72" text-anchor="end" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="22" font-weight="700" fill="#b8863c">استدعاء Claude</text>
   <path d="M342 96V86H580V96" fill="none" stroke="#b8863c" stroke-width="2"/>
-  <text x="302" y="72" text-anchor="end" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="22" font-weight="700" fill="#96897a">النتيجة</text>
+  <text x="302" y="72" text-anchor="end" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="22" font-weight="700" fill="#96897a">المخرجات</text>
   <path d="M64 96V86H302V96" fill="none" stroke="#96897a" stroke-width="2"/>
   <rect x="898" y="116" width="238" height="244" fill="#171310" stroke="#f4efe4" stroke-opacity="0.14"/>
   <text x="1114" y="156" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" font-weight="700" text-anchor="start" direction="rtl" fill="#ff7a1a">01 جلب</text>
@@ -25,16 +25,16 @@
   <line x1="642" y1="216" x2="836" y2="216" stroke="#f4efe4" stroke-opacity="0.14"/>
   <text x="836" y="252" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">4 درجات Lighthouse</text>
   <text x="836" y="282" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">درجة الصحّة هي</text>
-  <text x="836" y="312" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">متوسّطها، ويحسبها</text>
-  <text x="836" y="342" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">الكود لا النموذج</text>
+  <text x="836" y="312" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">متوسّطها بعد</text>
+  <text x="836" y="342" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">التقريب</text>
   <path d="M608.0 229.0L596.0 238.0L608.0 247.0" fill="none" stroke="#ff7a1a" stroke-width="3"/>
   <rect x="342" y="116" width="238" height="244" fill="#171310" stroke="#f4efe4" stroke-opacity="0.14"/>
-  <text x="558" y="156" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" font-weight="700" text-anchor="start" direction="rtl" fill="#ff7a1a">03 شرح</text>
+  <text x="558" y="156" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" font-weight="700" text-anchor="start" direction="rtl" fill="#ff7a1a">03 تحليل</text>
   <text x="558" y="196" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" fill="#f4efe4">analyze.ts</text>
   <line x1="364" y1="216" x2="558" y2="216" stroke="#f4efe4" stroke-opacity="0.14"/>
   <text x="558" y="252" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">Claude يقرأ الاثنين</text>
   <text x="558" y="282" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">ويُلزَم بأداة محدّدة</text>
-  <text x="558" y="312" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">تعيد مخطّطاً ثابتاً:</text>
+  <text x="558" y="312" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">فيعيد JSON فيه:</text>
   <text x="558" y="342" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">ملخّص و5 إصلاحات</text>
   <path d="M330.0 229.0L318.0 238.0L330.0 247.0" fill="none" stroke="#ff7a1a" stroke-width="3"/>
   <rect x="64" y="116" width="238" height="244" fill="#171310" stroke="#f4efe4" stroke-opacity="0.14"/>
@@ -45,5 +45,5 @@
   <text x="280" y="282" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">مؤشّرات وقائمة</text>
   <text x="280" y="312" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">إصلاحات مرتّبة</text>
   <text x="280" y="342" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="20" fill="#b3a696">تصدير PDF وCSV</text>
-  <text x="1136" y="410" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="21" fill="#96897a"><tspan fill="#ff7a1a">&lt;</tspan> كل ما يجب أن يتطابق بين تشغيل وآخر حسابٌ في الكود، لا تخمينٌ من النموذج.</text>
+  <text x="1136" y="410" text-anchor="start" direction="rtl" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" font-size="21" fill="#96897a"><tspan fill="#ff7a1a">&lt;</tspan> درجة الصحّة = متوسّط الدرجات الأربع بعد التقريب</text>
 </svg>

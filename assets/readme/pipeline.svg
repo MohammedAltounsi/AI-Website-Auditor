@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc">
   <title id="title">How an audit runs</title>
-  <desc id="desc">Four stages. Fetch and Score run in code, so the Health Score is the same every run. Only the Explain stage calls Claude, which returns a summary and five ranked fixes through a fixed schema.</desc>
+  <desc id="desc">Four stages. Fetch and Score make no AI calls; the Health Score is the rounded average of four PageSpeed scores. The Analyze stage calls the Claude API, which returns a summary and five fixes as JSON through forced tool-use. Report returns one JSON report with PDF and CSV export.</desc>
   <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#f4efe4" stroke-opacity="0.05"/></pattern></defs>
   <rect width="1200" height="440" rx="24" fill="#0b0a08"/>
   <rect width="1200" height="440" rx="24" fill="url(#grid)"/>
-  <text x="64" y="72"  font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" letter-spacing="3" fill="#ff7a1a">CODE DECIDES</text>
+  <text x="64" y="72"  font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" letter-spacing="3" fill="#ff7a1a">NO AI CALLS</text>
   <path d="M64 96V86H580V96" fill="none" stroke="#ff7a1a" stroke-width="2"/>
-  <text x="620" y="72"  font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" letter-spacing="3" fill="#b8863c">MODEL EXPLAINS</text>
+  <text x="620" y="72"  font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" letter-spacing="3" fill="#b8863c">CLAUDE API CALL</text>
   <path d="M620 96V86H858V96" fill="none" stroke="#b8863c" stroke-width="2"/>
-  <text x="898" y="72"  font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" letter-spacing="3" fill="#96897a">YOU GET</text>
+  <text x="898" y="72"  font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" letter-spacing="3" fill="#96897a">OUTPUT</text>
   <path d="M898 96V86H1136V96" fill="none" stroke="#96897a" stroke-width="2"/>
   <rect x="64" y="116" width="238" height="244" fill="#171310" stroke="#f4efe4" stroke-opacity="0.14"/>
   <text x="86" y="156" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" letter-spacing="3" fill="#ff7a1a">01 FETCH</text>
@@ -26,15 +26,15 @@
   <text x="364" y="252"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">4 Lighthouse scores</text>
   <text x="364" y="282"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">Health Score =</text>
   <text x="364" y="312"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">their average,</text>
-  <text x="364" y="342"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">computed in code</text>
+  <text x="364" y="342"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">rounded</text>
   <path d="M592.0 229.0L604.0 238.0L592.0 247.0" fill="none" stroke="#ff7a1a" stroke-width="3"/>
   <rect x="620" y="116" width="238" height="244" fill="#171310" stroke="#f4efe4" stroke-opacity="0.14"/>
-  <text x="642" y="156" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" letter-spacing="3" fill="#ff7a1a">03 EXPLAIN</text>
+  <text x="642" y="156" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" letter-spacing="3" fill="#ff7a1a">03 ANALYZE</text>
   <text x="642" y="196"  font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" fill="#f4efe4">analyze.ts</text>
   <line x1="642" y1="216" x2="836" y2="216" stroke="#f4efe4" stroke-opacity="0.14"/>
-  <text x="642" y="252"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">Claude reads both</text>
+  <text x="642" y="252"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">Claude gets both</text>
   <text x="642" y="282"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">Forced tool-use</text>
-  <text x="642" y="312"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">returns a schema:</text>
+  <text x="642" y="312"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">returns JSON:</text>
   <text x="642" y="342"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">summary + 5 fixes</text>
   <path d="M870.0 229.0L882.0 238.0L870.0 247.0" fill="none" stroke="#ff7a1a" stroke-width="3"/>
   <rect x="898" y="116" width="238" height="244" fill="#171310" stroke="#f4efe4" stroke-opacity="0.14"/>
@@ -45,5 +45,5 @@
   <text x="920" y="282"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">Gauges and a</text>
   <text x="920" y="312"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">ranked fix list</text>
   <text x="920" y="342"  font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#b3a696">PDF and CSV export</text>
-  <text x="64" y="410"  font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="19" fill="#96897a"><tspan fill="#ff7a1a">&gt;</tspan> Anything that has to match between runs is arithmetic, not a model guess.</text>
+  <text x="64" y="410"  font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="19" fill="#96897a"><tspan fill="#ff7a1a">&gt;</tspan> Health Score = round((perf + a11y + seo + best practices) / 4)</text>
 </svg>

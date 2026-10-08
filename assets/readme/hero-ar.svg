@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
   <title id="title">مُدقّق المواقع بالذكاء الاصطناعي</title>
-  <desc id="desc">الصق رابطاً واحصل على درجة صحّة من بيانات PageSpeed الحقيقية وقائمة إصلاحات مرتّبة. اللوحة تعرض تدقيقاً حقيقياً لموقع stripe.com: درجة الصحّة 73، وهي متوسّط الأداء 44 وإتاحة الوصول 100 وSEO 92 وأفضل الممارسات 54 بعد التقريب.</desc>
+  <desc id="desc">يقيّم الموقع ببيانات Google PageSpeed Insights ويطلب من Claude قائمة بالإصلاحات. اللوحة تعرض تدقيق موقع stripe.com: درجة الصحّة 73، وهي متوسّط الأداء 44 وإتاحة الوصول 100 وSEO 92 وأفضل الممارسات 54 بعد التقريب.</desc>
   <defs>
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" fill="none" stroke="#f4efe4" stroke-opacity="0.05" stroke-width="1"/>
@@ -11,14 +11,14 @@
   <rect width="1200" height="420" rx="24" fill="url(#grid)"/>
 
   <g id="title-block" font-family="'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', sans-serif" text-anchor="start" direction="rtl">
-    <text x="1136" y="92" direction="ltr" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" letter-spacing="4" fill="#ff7a1a">SYSTEM // WEBSITE AUDITOR</text>
+    <text x="1136" y="92" direction="ltr" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" letter-spacing="4" fill="#ff7a1a">NEXT.JS + CLAUDE API</text>
     <text x="1136" y="170" font-size="64" font-weight="700" fill="#f4efe4">مُدقّق المواقع</text>
     <text x="1136" y="242" font-size="46" font-weight="700" fill="#f4efe4">بالذكاء الاصطناعي</text>
     <g font-size="25" fill="#b3a696">
-      <text x="1136" y="298">الصق رابطاً، واحصل على درجة صحّة من بيانات</text>
-      <text x="1136" y="334">PageSpeed الحقيقية وقائمة إصلاحات مرتّبة.</text>
+      <text x="1136" y="298">يقيّم الموقع ببيانات PageSpeed Insights</text>
+      <text x="1136" y="334">ويطلب من Claude قائمة بالإصلاحات.</text>
     </g>
-    <text x="1136" y="374" font-size="21" fill="#96897a"><tspan fill="#ff7a1a">&lt;</tspan> النموذج يشرح، والكود يقرّر</text>
+    <text x="1136" y="374" font-size="21" fill="#96897a"><tspan fill="#ff7a1a">&lt;</tspan> ai-website-auditor-indol.vercel.app</text>
   </g>
 
   <g id="project-proof" transform="translate(-626 0)" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">

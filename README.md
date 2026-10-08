@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://ai-website-auditor-indol.vercel.app">
-    <img src="./assets/readme/hero.svg" width="100%" alt="AI Website Auditor: paste a URL, get a Health Score from real PageSpeed data and a ranked list of fixes. Sample panel shows a stripe.com audit scoring 73.">
+    <img src="./assets/readme/hero.svg" width="100%" alt="AI Website Auditor. Checks a website with Google PageSpeed Insights and lists fixes. The sample panel shows an audit of stripe.com with a Health Score of 73.">
   </a>
 </p>
 
@@ -24,49 +24,48 @@
   <a href="#how-an-audit-runs">How it works</a>
 </p>
 
-Paste a URL and the auditor returns a Health Score, a breakdown of
-performance, accessibility, SEO and best practices from Google PageSpeed
-Insights, a short Claude-written summary, and a severity-ranked list of
-fixes. You can export the report as PDF or CSV.
+A Next.js app that audits a website. You enter a URL, and it gets four
+category scores from Google PageSpeed Insights: performance, accessibility,
+SEO and best practices. It averages them into one Health Score. Then it sends
+the scores and some on-page SEO checks to Claude, which writes a short summary
+and the top five fixes, each tagged with a severity. The report can be
+downloaded as PDF or CSV.
 
-## A real run
+## Example: stripe.com
 
 <p align="center">
   <img src="./screenshots/audit.png" width="100%" alt="The live auditor after scanning stripe.com: Health Score 73, with Performance 44, Accessibility 100, SEO 92 and Best Practices 54">
 </p>
 
-This is the live app auditing stripe.com. The four category scores come
-straight from PageSpeed. The 73 in the middle is their average, rounded.
+This screenshot is from the live app. The four category scores are the
+numbers PageSpeed returned. The 73 in the middle is their average, rounded.
 
-## The core design decision
+## How the Health Score is calculated
 
-The model never produces the Health Score. The code takes the four real
-PageSpeed scores and runs `Math.round()` on their average, so the same site
-gets the same score on every audit. Claude writes the summary and the fix
-list and nothing else.
-
-The rule this project demonstrates: the model explains, the code decides
-anything that has to stay consistent between runs.
+`lib/pagespeed.ts` adds the four PageSpeed category scores, divides by four
+and rounds with `Math.round()`. Claude is not involved in this step. If
+PageSpeed returns the same four numbers, the Health Score comes out the same.
+Claude only writes the summary text and the fix list.
 
 ## How an audit runs
 
 <p align="center">
-  <img src="./assets/readme/pipeline.svg" width="100%" alt="Four stages: 01 Fetch (scrape.ts) and 02 Score (pagespeed.ts) run in code; 03 Explain (analyze.ts) calls Claude with forced tool-use for a summary and five fixes; 04 Report (route.ts) returns one JSON report with PDF and CSV export.">
+  <img src="./assets/readme/pipeline.svg" width="100%" alt="Four stages: 01 Fetch (scrape.ts) and 02 Score (pagespeed.ts) run in plain code; 03 Analyze (analyze.ts) calls the Claude API with forced tool-use for a summary and five fixes; 04 Report (route.ts) returns one JSON report with PDF and CSV export.">
 </p>
 
 <details>
-<summary><b>File-by-file walkthrough</b></summary>
+<summary><b>What each file does</b></summary>
 
 1. **`lib/scrape.ts`** fetches the target page and extracts on-page SEO
    signals with `cheerio`: title, meta description, H1 count, alt-text
    coverage, canonical tag, viewport meta and word count.
 2. **`lib/pagespeed.ts`** calls the PageSpeed Insights API (mobile
-   strategy) for the four category scores, retries transient 5xx errors up
-   to three times, and computes the Health Score as their average.
+   strategy) for the four category scores. On a 5xx error it tries again,
+   up to three attempts in total. It also computes the Health Score.
 3. **`lib/analyze.ts`** sends the scrape and PageSpeed data to Claude with
-   forced tool-use (`tool_choice: { type: 'tool' }`). The response is
-   always a structured object that matches the `submit_audit_report`
-   schema, never free text to parse.
+   forced tool-use (`tool_choice: { type: 'tool' }`). Claude has to answer
+   by calling the `submit_audit_report` tool, so the app reads a JSON object
+   that matches the tool's schema instead of parsing free text.
 4. **`app/api/audit/route.ts`** runs the pipeline and returns one JSON
    report.
 5. **`app/page.tsx` + `app/components/*`** render the URL form, the
@@ -75,20 +74,19 @@ anything that has to stay consistent between runs.
 
 </details>
 
-## Safe to point at any URL
+## Handling untrusted URLs
 
-The auditor fetches whatever public URL a visitor types, so `lib/scrape.ts`
-treats that input as hostile:
+The app fetches any public URL a visitor types in. These checks are in
+`lib/scrape.ts`, except the CSV one, which is in `lib/exportCsv.ts`:
 
-- **SSRF protection.** It resolves DNS first, blocks private, loopback,
-  link-local and IPv4-mapped IPv6 ranges, then pins the connection to the
-  checked IP. A public hostname that resolves to `169.254.169.254` gets
-  rejected.
+- **SSRF.** It resolves DNS first and blocks private, loopback, link-local
+  and IPv4-mapped IPv6 addresses. The connection then goes to the IP it
+  checked. A public hostname that resolves to `169.254.169.254` is rejected.
 - **Redirects.** It follows up to 5 redirects by hand and re-checks every
   hop, so a public URL cannot redirect into an internal address.
 - **Limits.** Each fetch times out after 15 seconds and stops reading at 5 MB.
-- **CSV export.** It escapes cells that start with `=`, `+`, `-` or `@`
-  to prevent formula injection in spreadsheet apps.
+- **CSV export.** Cells that start with `=`, `+`, `-` or `@` get a leading
+  `'` so a spreadsheet app won't run them as formulas.
 
 ## Run it locally
 
