@@ -11,6 +11,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/MohammedAltounsi/AI-Website-Auditor/actions/workflows/ci.yml"><img src="https://github.com/MohammedAltounsi/AI-Website-Auditor/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <a href="https://ai-website-auditor-indol.vercel.app"><img src="https://img.shields.io/website?url=https%3A%2F%2Fai-website-auditor-indol.vercel.app&label=live%20demo&up_message=online&up_color=ff7a1a&labelColor=171310&style=flat" alt="Live demo status"></a>
   <img src="https://img.shields.io/badge/Next.js-16-171310?style=flat&logo=nextdotjs&logoColor=white" alt="Next.js 16">
   <img src="https://img.shields.io/badge/TypeScript-5-171310?style=flat&logo=typescript&logoColor=white" alt="TypeScript 5">
