@@ -137,7 +137,7 @@ PageSpeed Insights، وواجهة Anthropic بنموذج `claude-sonnet-5` مع 
 ---
 
 <p align="center">
-  تصميم وتطوير: <b>محمد الطنسي</b> · <a href="https://www.linkedin.com/in/mohammed-altounsi/">لينكدإن</a>
+  تصميم وتطوير: <b>محمد التونسي</b> · <a href="https://www.linkedin.com/in/mohammed-altounsi/">لينكدإن</a>
 </p>
 
 </div>
